@@ -1,4 +1,3 @@
-// 🔹 TOTAL (uses available notes)
 function calculateTotal() {
     let n1000 = +document.getElementById("n1000").value || 0;
     let n500  = +document.getElementById("n500").value || 0;
@@ -17,7 +16,6 @@ function calculateTotal() {
 }
 
 
-// 🔹 BREAKDOWN (UNLIMITED notes ✅)
 function countNotes() {
     let amount = +document.getElementById("amount").value;
 
