@@ -1,4 +1,4 @@
-// ✅ Calculate total
+// 🔹 TOTAL (uses available notes)
 function calculateTotal() {
     let n1000 = +document.getElementById("n1000").value || 0;
     let n500  = +document.getElementById("n500").value || 0;
@@ -17,39 +17,33 @@ function calculateTotal() {
 }
 
 
-// ✅ Breakdown (FIXED VERSION)
+// 🔹 BREAKDOWN (UNLIMITED notes ✅)
 function countNotes() {
     let amount = +document.getElementById("amount").value;
 
-    if (!amount) {
-        document.getElementById("result").innerHTML = "⚠ Enter amount!";
+    if (!amount || amount <= 0) {
+        document.getElementById("result").innerHTML = "⚠ Enter valid amount!";
         return;
     }
 
-    let notes = [
-        { v:1000, c:+document.getElementById("n1000").value || 0 },
-        { v:500,  c:+document.getElementById("n500").value || 0 },
-        { v:200,  c:+document.getElementById("n200").value || 0 },
-        { v:100,  c:+document.getElementById("n100").value || 0 },
-        { v:50,   c:+document.getElementById("n50").value || 0 },
-        { v:20,   c:+document.getElementById("n20").value || 0 },
-        { v:10,   c:+document.getElementById("n10").value || 0 }
-    ];
+    let notes = [1000, 500, 200, 100, 50, 20, 10];
 
-    let output = "<b>Breakdown:</b><br>";
+    let output = "<b>Breakdown (Unlimited Notes):</b><br>";
 
-    notes.forEach(n => {
-        let use = Math.min(Math.floor(amount / n.v), n.c);
-        amount -= use * n.v;
+    for (let i = 0; i < notes.length; i++) {
+        let count = Math.floor(amount / notes[i]);
+        amount %= notes[i];
 
-        if (use > 0) {
-            output += `₹${n.v} → ${use}<br>`;
+        if (count > 0) {
+            output += `₹${notes[i]} → ${count} notes<br>`;
         }
-    });
+    }
 
-    output += amount > 0
-        ? `<br>❌ Remaining ₹${amount}`
-        : `<br>✅ Done`;
+    if (amount > 0) {
+        output += `<br>⚠ Remaining: ₹${amount}`;
+    } else {
+        output += `<br>✅ Done`;
+    }
 
     document.getElementById("result").innerHTML = output;
 }
