@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Counter Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>💰 Currency Counter</h1>
+
+    <div class="input-box">
+        <input type="number" id="amount" placeholder=" ">
+        <label>Enter Amount</label>
+    </div>
+
+    <h3>Available Notes</h3>
+
+    <div class="notes">
+
+        <div class="note-card">
+            <span>₹1000</span>
+            <input type="number" id="n1000" oninput="calculateTotal()">
+        </div>
+
+        <div class="note-card">
+            <span>₹500</span>
+            <input type="number" id="n500" oninput="calculateTotal()">
+        </div>
+
+        <div class="note-card">
+            <span>₹200</span>
+            <input type="number" id="n200" oninput="calculateTotal()">
+        </div>
+
+        <div class="note-card">
+            <span>₹100</span>
+            <input type="number" id="n100" oninput="calculateTotal()">
+        </div>
+
+        <div class="note-card">
+            <span>₹50</span>
+            <input type="number" id="n50" oninput="calculateTotal()">
+        </div>
+
+        <div class="note-card">
+            <span>₹20</span>
+            <input type="number" id="n20" oninput="calculateTotal()">
+        </div>
+
+        <div class="note-card">
+            <span>₹10</span>
+            <input type="number" id="n10" oninput="calculateTotal()">
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+        <button onclick="countNotes()">Breakdown</button>
+        <button onclick="calculateTotal()">Total</button>
+    </div>
+
+    <div id="total">₹0</div>
+    <div id="result"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
