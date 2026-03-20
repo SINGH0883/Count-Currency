@@ -1,3 +1,23 @@
+// ✅ Calculate total
+function calculateTotal() {
+    let n1000 = +document.getElementById("n1000").value || 0;
+    let n500  = +document.getElementById("n500").value || 0;
+    let n200  = +document.getElementById("n200").value || 0;
+    let n100  = +document.getElementById("n100").value || 0;
+    let n50   = +document.getElementById("n50").value || 0;
+    let n20   = +document.getElementById("n20").value || 0;
+    let n10   = +document.getElementById("n10").value || 0;
+
+    let total =
+        n1000*1000 + n500*500 + n200*200 +
+        n100*100 + n50*50 + n20*20 + n10*10;
+
+    document.getElementById("total").innerHTML =
+        "💰 ₹" + total.toLocaleString();
+}
+
+
+// ✅ Breakdown (FIXED VERSION)
 function countNotes() {
     let amount = +document.getElementById("amount").value;
 
