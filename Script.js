@@ -3,21 +3,31 @@ const currencies = {
     INR: {
         symbol: '₹',
         name: 'Rupees',
+        locale: 'en-IN',
         notes: [2000, 500, 200, 100, 50, 20, 10]
     },
     USD: {
         symbol: '$',
         name: 'Dollars',
+        locale: 'en-US',
         notes: [100, 50, 20, 10, 5, 2, 1]
     },
     EUR: {
         symbol: '€',
         name: 'Euros',
+        locale: 'en-US',
         notes: [500, 200, 100, 50, 20, 10, 5]
     }
 };
 
 let currentCurrencyKey = 'INR';
+
+// Format Number according to Active Currency System
+function formatCurrencyNumber(num) {
+    if (!num || isNaN(num)) return '0';
+    const curr = currencies[currentCurrencyKey];
+    return num.toLocaleString(curr.locale);
+}
 
 // Change Color Theme
 function changeTheme(themeName) {
@@ -81,7 +91,7 @@ function calculateTotal() {
 
     const totalElement = document.getElementById("total");
     if (totalElement) {
-        totalElement.innerHTML = `💰 ${curr.symbol}${total.toLocaleString()}`;
+        totalElement.innerHTML = `💰 ${curr.symbol}${formatCurrencyNumber(total)}`;
     }
 
     const wordsElement = document.getElementById("wordsResult");
@@ -90,11 +100,10 @@ function calculateTotal() {
     }
 }
 
-// Convert Number to English Words (Unrestricted Precision - No Overflow)
+// Convert Number to English Words (Indian System for INR, Western System for USD & EUR)
 function numberToWords(num, currencyName = "Rupees") {
     if (!num || num === 0) return `Zero ${currencyName} Only`;
 
-    // Handle large numbers cleanly using BigInt if passed as string/big number
     try {
         if (typeof num === 'string') {
             num = parseFloat(num) || 0;
@@ -123,7 +132,7 @@ function numberToWords(num, currencyName = "Rupees") {
     }
 
     if (currentCurrencyKey === 'INR') {
-        // Recursive Indian Numbering System (Crore, Lakh, Thousand, Hundred)
+        // Indian Numbering System (Crores, Lakhs, Thousands, Hundreds)
         function inWordsINR(n) {
             if (n <= 0) return '';
             let str = '';
@@ -147,7 +156,7 @@ function numberToWords(num, currencyName = "Rupees") {
         }
         return (inWordsINR(num).trim() || 'Zero') + ` ${currencyName} Only`;
     } else {
-        // Recursive Western Numbering System (Trillion, Billion, Million, Thousand)
+        // Western Numbering System for USD ($) & EUR (€) (Trillions, Billions, Millions, Thousands)
         function inWordsWestern(n) {
             if (n <= 0) return '';
             let str = '';
@@ -188,7 +197,7 @@ function countNotes() {
 
     const breakdownTotalElement = document.getElementById("breakdownTotal");
     if (breakdownTotalElement) {
-        breakdownTotalElement.innerHTML = `🎯 ${curr.symbol}${amount > 0 ? amount.toLocaleString() : 0}`;
+        breakdownTotalElement.innerHTML = `🎯 ${curr.symbol}${amount > 0 ? formatCurrencyNumber(amount) : 0}`;
     }
 
     const breakdownWordsElement = document.getElementById("breakdownWords");
@@ -209,12 +218,12 @@ function countNotes() {
         remaining %= note;
 
         if (count > 0) {
-            output += `${curr.symbol}${note} → <b>${count.toLocaleString()}</b> notes<br>`;
+            output += `${curr.symbol}${note} → <b>${formatCurrencyNumber(count)}</b> notes<br>`;
         }
     });
 
     if (remaining > 0) {
-        output += `<br>⚠ Remaining balance: ${curr.symbol}${remaining.toLocaleString()}`;
+        output += `<br>⚠ Remaining balance: ${curr.symbol}${formatCurrencyNumber(remaining)}`;
     } else {
         output += `<br>✅ Complete Breakdown`;
     }
