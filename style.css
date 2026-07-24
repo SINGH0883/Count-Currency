@@ -1,131 +1,344 @@
+:root {
+    --bg-dark: #07090e;
+    --card-bg: rgba(15, 18, 28, 0.82);
+    --card-border: rgba(255, 255, 255, 0.12);
+    --input-bg: rgba(8, 10, 16, 0.7);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --accent-blue: #38bdf8;
+    --accent-purple: #c084fc;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    
+    --btn-primary: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+    --btn-secondary: rgba(30, 41, 59, 0.7);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    height: 100vh;
-    background: linear-gradient(135deg, #020617, #081b29, #02121f);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    position: relative;
+    overflow-x: hidden;
+    padding: 20px;
 }
 
+/* Ambient Floating Orbs Background */
+.ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.45;
+    pointer-events: none;
+    animation: orbFloat 22s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, transparent 70%);
+    top: -120px;
+    left: -120px;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(192, 132, 252, 0.5) 0%, transparent 70%);
+    bottom: -160px;
+    right: -120px;
+    animation-delay: -7s;
+}
+
+@keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, -60px) scale(1.12); }
+    100% { transform: translate(-40px, 50px) scale(0.92); }
+}
+
+/* Main Glassmorphic Card Container */
 .container {
-    width: 420px;
-    padding: 25px;
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    background: rgba(255,255,255,0.05);
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
-    animation: fadeIn 1s ease;
+    width: 100%;
+    max-width: 480px;
+    background: var(--card-bg);
+    backdrop-filter: blur(30px) saturate(190%);
+    -webkit-backdrop-filter: blur(30px) saturate(190%);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.75),
+                0 0 50px rgba(56, 189, 248, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    position: relative;
+    z-index: 10;
+    animation: fadeIn 0.8s ease;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+/* Header & Brand */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
 }
 
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
+.brand-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    box-shadow: 0 0 12px var(--accent-blue);
+    animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    100% { transform: scale(1.3); opacity: 1; }
+}
+
+.brand-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+}
+
+/* Currency Selector Pills */
+.currency-selector {
+    display: flex;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.curr-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.curr-btn.active {
+    background: rgba(56, 189, 248, 0.2);
+    color: var(--accent-blue);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+/* Floating Label Input Box */
 .input-box {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .input-box input {
     width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    background: rgba(255,255,255,0.1);
-    color: white;
+    padding: 14px 16px;
+    font-family: 'Fira Code', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-box input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
 }
 
 .input-box label {
     position: absolute;
-    left: 12px;
-    top: 12px;
-    color: #aaa;
-    transition: 0.3s;
+    left: 16px;
+    top: 14px;
+    color: var(--text-muted);
+    font-size: 14px;
+    pointer-events: none;
+    transition: all 0.25s ease;
 }
 
 .input-box input:focus + label,
 .input-box input:not(:placeholder-shown) + label {
     top: -10px;
-    font-size: 12px;
-    color: #0ef;
+    left: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    background: var(--bg-dark);
+    padding: 0 6px;
+    border-radius: 4px;
 }
 
+/* Section Title */
+.section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
 
+/* Note Denominations Grid */
 .notes {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 22px;
 }
 
 .note-card {
-    background: rgba(255,255,255,0.08);
-    padding: 10px;
-    border-radius: 12px;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 14px;
+    border-radius: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: 0.3s;
+    transition: all 0.2s ease;
 }
 
 .note-card:hover {
-    transform: scale(1.05);
-    background: rgba(0,255,255,0.1);
+    border-color: rgba(56, 189, 248, 0.3);
+    background: rgba(43, 58, 88, 0.7);
+    transform: translateY(-2px);
+}
+
+.note-card span {
+    font-family: 'Fira Code', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-blue);
 }
 
 .note-card input {
-    width: 60px;
-    border-radius: 6px;
-    border: none;
+    width: 65px;
+    font-family: 'Fira Code', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(10, 14, 23, 0.8);
+    color: var(--text-primary);
     padding: 5px;
+    outline: none;
 }
 
+.note-card input:focus {
+    border-color: var(--accent-blue);
+}
 
+/* Buttons */
 .buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    gap: 12px;
+    margin-bottom: 22px;
 }
 
-button {
-    width: 48%;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(45deg,#0ef,#00c3ff);
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    transform: scale(1.05);
-}
-
-
-#total {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 22px;
-    color: #0ef;
-}
-
-#result {
-    margin-top: 15px;
+.btn {
+    flex: 1;
+    font-family: 'Outfit', sans-serif;
     font-size: 14px;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
+.btn-primary {
+    background: var(--btn-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+}
+
+.btn-secondary {
+    background: var(--btn-secondary);
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+    background: rgba(51, 65, 85, 0.9);
+    color: var(--text-primary);
+}
+
+/* Result Box & English Words Box */
+.result-box {
+    background: var(--input-bg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 18px;
+    text-align: center;
+}
+
+.total-display {
+    font-family: 'Fira Code', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-bottom: 6px;
+    text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+}
+
+.words-display {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-purple);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+    line-height: 18px;
+    min-height: 18px;
+}
+
+.breakdown-display {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 20px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+}
 
 @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
