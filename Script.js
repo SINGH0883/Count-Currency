@@ -34,7 +34,7 @@ function loadSavedTheme() {
     if (themeSelect) themeSelect.value = savedTheme;
 }
 
-// Render Note Input Cards based on active currency
+// Render Note Input Cards based on active currency (Type 1 Panel)
 function renderNoteGrid() {
     const grid = document.getElementById('notesGrid');
     if (!grid) return;
@@ -67,7 +67,7 @@ function setCurrency(key) {
     renderNoteGrid();
 }
 
-// Calculate Total Cash Value & Display English Words
+// Type 1: Calculate Physical Cash Total & English Words
 function calculateTotal() {
     const curr = currencies[currentCurrencyKey];
     let total = 0;
@@ -166,18 +166,28 @@ function numberToWords(num, currencyName = "Rupees") {
     }
 }
 
-// Greedy Denomination Breakdown Algorithm for Target Amount
+// Type 2: Target Amount Breakdown Algorithm & Words Display
 function countNotes() {
     const amountInput = document.getElementById("amount");
     let amount = amountInput ? parseInt(amountInput.value) : 0;
     const resultElement = document.getElementById("result");
+    const curr = currencies[currentCurrencyKey];
+
+    const breakdownTotalElement = document.getElementById("breakdownTotal");
+    if (breakdownTotalElement) {
+        breakdownTotalElement.innerHTML = `🎯 ${curr.symbol}${(amount || 0).toLocaleString()}`;
+    }
+
+    const breakdownWordsElement = document.getElementById("breakdownWords");
+    if (breakdownWordsElement) {
+        breakdownWordsElement.textContent = numberToWords(amount || 0, curr.name);
+    }
 
     if (!amount || amount <= 0) {
-        if (resultElement) resultElement.innerHTML = "<span class='muted-hint'>Enter a valid target amount above to view breakdown.</span>";
+        if (resultElement) resultElement.innerHTML = "<span class='muted-hint'>Enter a target amount above to generate optimal note breakdown.</span>";
         return;
     }
 
-    const curr = currencies[currentCurrencyKey];
     let remaining = amount;
     let output = `<b>Recommended ${curr.name} Breakdown:</b><br>`;
 
@@ -197,29 +207,23 @@ function countNotes() {
     }
 
     if (resultElement) resultElement.innerHTML = output;
-
-    // Set Words for Target Amount
-    const wordsElement = document.getElementById("wordsResult");
-    if (wordsElement) {
-        wordsElement.textContent = numberToWords(amount, curr.name);
-    }
 }
 
-// Reset All Inputs & Results
-function resetAll() {
-    const amountInput = document.getElementById("amount");
-    if (amountInput) amountInput.value = "";
-
-    const resultElement = document.getElementById("result");
-    if (resultElement) resultElement.innerHTML = "<span class='muted-hint'>Type note counts on the right or enter a target amount above.</span>";
-
+// Reset Type 1 Physical Notes
+function resetPhysicalNotes() {
     const curr = currencies[currentCurrencyKey];
     curr.notes.forEach(note => {
         const input = document.getElementById(`n${note}`);
         if (input) input.value = "";
     });
-
     calculateTotal();
+}
+
+// Reset Type 2 Breakdown
+function resetBreakdown() {
+    const amountInput = document.getElementById("amount");
+    if (amountInput) amountInput.value = "";
+    countNotes();
 }
 
 // Initialize on DOM load

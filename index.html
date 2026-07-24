@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Currency Counter Pro — Ultra Widescreen Edition</title>
+    <title>Currency Counter Pro — Dual-Type Widescreen Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,7 @@
             <div class="brand">
                 <span class="brand-dot"></span>
                 <span class="brand-name">CURRENCY COUNTER PRO</span>
-                <span class="version-tag">PRO v3.0</span>
+                <span class="version-tag">DUAL-TYPE v3.5</span>
             </div>
             
             <div class="header-controls">
@@ -33,7 +33,7 @@
                     <button class="curr-btn" id="currEUR" onclick="setCurrency('EUR')">€ EUR</button>
                 </div>
 
-                <!-- Theme Switcher -->
+                <!-- Theme Selector -->
                 <select class="theme-select" id="themeSelect" onchange="changeTheme(this.value)">
                     <option value="cyberpunk">🌌 Cyberpunk</option>
                     <option value="violet">🔮 Neon Violet</option>
@@ -44,45 +44,56 @@
             </div>
         </div>
 
-        <!-- Ultra-Wide 2-Panel Body -->
+        <!-- Dual-Type 2-Panel Widescreen Body -->
         <div class="keypad-panels">
-            <!-- Left Panel: Total & English Words Overview (Width: 42%) -->
-            <div class="panel panel-left">
-                <div class="panel-title">TOTAL & WORDS OVERVIEW</div>
-                
-                <!-- Target Amount Input Box -->
-                <div class="input-box">
-                    <input type="number" id="amount" placeholder=" " oninput="countNotes()">
-                    <label id="inputLabel">Enter Amount for Breakdown</label>
-                </div>
-
-                <!-- Total Cash Glow Card -->
-                <div class="total-card">
-                    <div id="total" class="total-display">💰 ₹0</div>
-                    <div id="wordsResult" class="words-display">Zero Rupees Only</div>
-                </div>
-
-                <!-- Breakdown Result Output -->
-                <div id="result" class="breakdown-display">
-                    <span class="muted-hint">Type note counts on the right or enter a target amount above.</span>
-                </div>
-            </div>
-
-            <!-- Right Panel: Denomination Note Input Cards (Width: 58%) -->
-            <div class="panel panel-right">
+            <!-- TYPE 1: PHYSICAL CASH COUNTER (Left Panel) -->
+            <div class="panel panel-type-1">
                 <div class="panel-header-flex">
-                    <div class="panel-title">PHYSICAL CASH DENOMINATIONS</div>
-                    <button class="btn-reset-link" onclick="resetAll()">Reset All</button>
+                    <div class="panel-title">TYPE 1: PHYSICAL CASH COUNTER</div>
+                    <button class="btn-reset-link" onclick="resetPhysicalNotes()">Clear Notes</button>
                 </div>
 
-                <!-- 4 Columns x 2 Rows Compact Note Grid -->
+                <!-- Physical Cash Note Cards Grid -->
                 <div class="notes-grid-compact" id="notesGrid">
                     <!-- Rendered dynamically by Script.js -->
                 </div>
 
+                <!-- Type 1 Total Cash Display & Words Box -->
+                <div class="total-card">
+                    <div class="card-label">PHYSICAL CASH TOTAL</div>
+                    <div id="total" class="total-display">💰 ₹0</div>
+                    <div id="wordsResult" class="words-display">Zero Rupees Only</div>
+                </div>
+            </div>
+
+            <!-- TYPE 2: TARGET AMOUNT BREAKDOWN (Right Panel) -->
+            <div class="panel panel-type-2">
+                <div class="panel-header-flex">
+                    <div class="panel-title">TYPE 2: TARGET BREAKDOWN GENERATOR</div>
+                    <button class="btn-reset-link" onclick="resetBreakdown()">Clear Target</button>
+                </div>
+                
+                <!-- Target Amount Input Box -->
+                <div class="input-box">
+                    <input type="number" id="amount" placeholder=" " oninput="countNotes()">
+                    <label id="inputLabel">Enter Target Amount</label>
+                </div>
+
+                <!-- Type 2 Breakdown Total & Words Display -->
+                <div class="total-card breakdown-total-card">
+                    <div class="card-label">BREAKDOWN TARGET TOTAL</div>
+                    <div id="breakdownTotal" class="total-display alt-total">🎯 ₹0</div>
+                    <div id="breakdownWords" class="words-display">Zero Rupees Only</div>
+                </div>
+
+                <!-- Breakdown Output Container -->
+                <div id="result" class="breakdown-display">
+                    <span class="muted-hint">Enter a target amount above to generate optimal note breakdown.</span>
+                </div>
+
                 <!-- Action Button Bar -->
                 <div class="action-bar">
-                    <button class="btn btn-primary" onclick="countNotes()">Compute Denomination Breakdown</button>
+                    <button class="btn btn-primary" onclick="countNotes()">Generate Note Breakdown</button>
                 </div>
             </div>
         </div>
