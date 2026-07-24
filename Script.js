@@ -89,39 +89,80 @@ function calculateTotal() {
     }
 }
 
-// Convert Number to English Words
+// Convert Number to English Words (Unrestricted Precision - No Overflow)
 function numberToWords(num, currencyName = "Rupees") {
-    if (num === 0) return `Zero ${currencyName} Only`;
+    if (!num || num === 0) return `Zero ${currencyName} Only`;
 
-    const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
-    const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 
+                  'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+    function convertBelowThousand(n) {
+        let str = '';
+        if (n >= 100) {
+            str += ones[Math.floor(n / 100)] + ' Hundred ';
+            n %= 100;
+        }
+        if (n >= 20) {
+            str += tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + ones[n % 10] : '') + ' ';
+        } else if (n > 0) {
+            str += ones[n] + ' ';
+        }
+        return str;
+    }
 
     if (currentCurrencyKey === 'INR') {
-        // Indian Numbering System (Lakhs, Crores)
+        // Recursive Indian Numbering System (Crore, Lakh, Thousand, Hundred)
         function inWordsINR(n) {
-            if ((n = n.toString()).length > 9) return 'Overflow';
-            let n_array = ('000000000' + n).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-            if (!n_array) return '';
+            if (n === 0) return '';
             let str = '';
-            str += (n_array[1] != 0) ? (a[Number(n_array[1])] || b[n_array[1][0]] + ' ' + a[n_array[1][1]]) + 'Crore ' : '';
-            str += (n_array[2] != 0) ? (a[Number(n_array[2])] || b[n_array[2][0]] + ' ' + a[n_array[2][1]]) + 'Lakh ' : '';
-            str += (n_array[3] != 0) ? (a[Number(n_array[3])] || b[n_array[3][0]] + ' ' + a[n_array[3][1]]) + 'Thousand ' : '';
-            str += (n_array[4] != 0) ? (a[Number(n_array[4])] || b[n_array[4][0]] + ' ' + a[n_array[4][1]]) + 'Hundred ' : '';
-            str += (n_array[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n_array[5])] || b[n_array[5][0]] + ' ' + a[n_array[5][1]]) : '';
-            return str.trim();
+
+            if (n >= 10000000) { // 1 Crore = 10,000,000
+                str += inWordsINR(Math.floor(n / 10000000)) + 'Crore ';
+                n %= 10000000;
+            }
+            if (n >= 100000) { // 1 Lakh = 100,000
+                str += convertBelowThousand(Math.floor(n / 100000)) + 'Lakh ';
+                n %= 100000;
+            }
+            if (n >= 1000) { // 1 Thousand
+                str += convertBelowThousand(Math.floor(n / 1000)) + 'Thousand ';
+                n %= 1000;
+            }
+            if (n > 0) {
+                str += convertBelowThousand(n);
+            }
+            return str;
         }
-        return inWordsINR(num) + ` ${currencyName} Only`;
+        return (inWordsINR(num).trim() || 'Zero') + ` ${currencyName} Only`;
     } else {
-        // Western Numbering System (Millions, Thousands)
+        // Recursive Western Numbering System (Trillion, Billion, Million, Thousand)
         function inWordsWestern(n) {
-            if (n < 20) return a[n];
-            if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + a[n % 10] : ' ');
-            if (n < 1000) return a[Math.floor(n / 100)] + 'Hundred ' + (n % 100 !== 0 ? inWordsWestern(n % 100) : '');
-            if (n < 1000000) return inWordsWestern(Math.floor(n / 1000)) + 'Thousand ' + (n % 1000 !== 0 ? inWordsWestern(n % 1000) : '');
-            if (n < 1000000000) return inWordsWestern(Math.floor(n / 1000000)) + 'Million ' + (n % 1000000 !== 0 ? inWordsWestern(n % 1000000) : '');
-            return 'Overflow';
+            if (n === 0) return '';
+            let str = '';
+
+            if (n >= 1000000000000) {
+                str += inWordsWestern(Math.floor(n / 1000000000000)) + 'Trillion ';
+                n %= 1000000000000;
+            }
+            if (n >= 1000000000) {
+                str += inWordsWestern(Math.floor(n / 1000000000)) + 'Billion ';
+                n %= 1000000000;
+            }
+            if (n >= 1000000) {
+                str += inWordsWestern(Math.floor(n / 1000000)) + 'Million ';
+                n %= 1000000;
+            }
+            if (n >= 1000) {
+                str += convertBelowThousand(Math.floor(n / 1000)) + 'Thousand ';
+                n %= 1000;
+            }
+            if (n > 0) {
+                str += convertBelowThousand(n);
+            }
+            return str;
         }
-        return inWordsWestern(num).trim() + ` ${currencyName} Only`;
+        return (inWordsWestern(num).trim() || 'Zero') + ` ${currencyName} Only`;
     }
 }
 
@@ -150,7 +191,7 @@ function countNotes() {
     });
 
     if (remaining > 0) {
-        output += `<br>⚠ Remaining balance: ${curr.symbol}${remaining}`;
+        output += `<br>⚠ Remaining balance: ${curr.symbol}${remaining.toLocaleString()}`;
     } else {
         output += `<br>✅ Complete Breakdown`;
     }
@@ -170,7 +211,7 @@ function resetAll() {
     if (amountInput) amountInput.value = "";
 
     const resultElement = document.getElementById("result");
-    if (resultElement) resultElement.innerHTML = "<span class='muted-hint'>Enter an amount or type note quantities on the right to start counting.</span>";
+    if (resultElement) resultElement.innerHTML = "<span class='muted-hint'>Type note counts on the right or enter a target amount above.</span>";
 
     const curr = currencies[currentCurrencyKey];
     curr.notes.forEach(note => {
