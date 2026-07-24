@@ -19,6 +19,21 @@ const currencies = {
 
 let currentCurrencyKey = 'INR';
 
+// Change Color Theme
+function changeTheme(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('count_currency_theme', themeName);
+}
+
+// Load Saved Theme Preference
+function loadSavedTheme() {
+    const savedTheme = localStorage.getItem('count_currency_theme') || 'cyberpunk';
+    document.body.setAttribute('data-theme', savedTheme);
+
+    const themeSelect = document.getElementById('themeSelect');
+    if (themeSelect) themeSelect.value = savedTheme;
+}
+
 // Render Note Input Cards based on active currency
 function renderNoteGrid() {
     const grid = document.getElementById('notesGrid');
@@ -117,7 +132,7 @@ function countNotes() {
     const resultElement = document.getElementById("result");
 
     if (!amount || amount <= 0) {
-        if (resultElement) resultElement.innerHTML = "⚠ Enter a valid amount to breakdown!";
+        if (resultElement) resultElement.innerHTML = "<span class='muted-hint'>Enter a valid target amount above to view breakdown.</span>";
         return;
     }
 
@@ -155,7 +170,7 @@ function resetAll() {
     if (amountInput) amountInput.value = "";
 
     const resultElement = document.getElementById("result");
-    if (resultElement) resultElement.innerHTML = "";
+    if (resultElement) resultElement.innerHTML = "<span class='muted-hint'>Enter an amount or type note quantities on the right to start counting.</span>";
 
     const curr = currencies[currentCurrencyKey];
     curr.notes.forEach(note => {
@@ -168,5 +183,6 @@ function resetAll() {
 
 // Initialize on DOM load
 document.addEventListener("DOMContentLoaded", () => {
+    loadSavedTheme();
     renderNoteGrid();
 });

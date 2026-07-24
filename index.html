@@ -4,56 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Currency Counter Pro — Widescreen Western Edition</title>
+    <title>Currency Counter Pro — Widescreen Landscape Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body data-theme="cyberpunk">
     <!-- Ambient Background Light Orbs -->
     <div class="ambient-orb orb-1"></div>
     <div class="ambient-orb orb-2"></div>
 
-    <div class="container">
-        <!-- Header & Currency Selector -->
+    <div class="container wide-container">
+        <!-- Top Header & Theme Selector -->
         <div class="header">
             <div class="brand">
                 <span class="brand-dot"></span>
                 <span class="brand-name">CURRENCY COUNTER PRO</span>
             </div>
-            <div class="currency-selector">
-                <button class="curr-btn active" id="currINR" onclick="setCurrency('INR')">₹ INR</button>
-                <button class="curr-btn" id="currUSD" onclick="setCurrency('USD')">$ USD</button>
-                <button class="curr-btn" id="currEUR" onclick="setCurrency('EUR')">€ EUR</button>
+            
+            <div class="header-right">
+                <!-- Currency Pills -->
+                <div class="currency-selector">
+                    <button class="curr-btn active" id="currINR" onclick="setCurrency('INR')">₹ INR</button>
+                    <button class="curr-btn" id="currUSD" onclick="setCurrency('USD')">$ USD</button>
+                    <button class="curr-btn" id="currEUR" onclick="setCurrency('EUR')">€ EUR</button>
+                </div>
+
+                <!-- Theme Switcher Selector -->
+                <select class="theme-select" id="themeSelect" onchange="changeTheme(this.value)">
+                    <option value="cyberpunk">🌌 Cyberpunk</option>
+                    <option value="violet">🔮 Neon Violet</option>
+                    <option value="emerald">🌿 Emerald Gold</option>
+                    <option value="midnight">🌙 Midnight Blue</option>
+                    <option value="solar">☀️ Solar Light</option>
+                </select>
             </div>
         </div>
 
-        <!-- Target Amount Input Box -->
-        <div class="input-box">
-            <input type="number" id="amount" placeholder=" " oninput="countNotes()">
-            <label id="inputLabel">Enter Amount for Breakdown</label>
-        </div>
+        <!-- Landscape 2-Panel Layout Body -->
+        <div class="landscape-panels">
+            <!-- Left Panel: Summary & Target Breakdown -->
+            <div class="panel panel-summary">
+                <div class="panel-title">TOTAL & BREAKDOWN</div>
+                
+                <!-- Target Amount Breakdown Input -->
+                <div class="input-box">
+                    <input type="number" id="amount" placeholder=" " oninput="countNotes()">
+                    <label id="inputLabel">Enter Amount for Breakdown</label>
+                </div>
 
-        <div class="section-title">Physical Note Denominations</div>
+                <!-- Total Display Card -->
+                <div class="total-card">
+                    <div id="total" class="total-display">💰 ₹0</div>
+                    <div id="wordsResult" class="words-display">Zero Rupees Only</div>
+                </div>
 
-        <!-- Dynamic Note Grid -->
-        <div class="notes" id="notesGrid">
-            <!-- Rendered by JavaScript -->
-        </div>
+                <!-- Breakdown Output Container -->
+                <div id="result" class="breakdown-display">
+                    <span class="muted-hint">Enter an amount or type note quantities on the right to start counting.</span>
+                </div>
+            </div>
 
-        <!-- Action Buttons -->
-        <div class="buttons">
-            <button class="btn btn-primary" onclick="countNotes()">Breakdown Notes</button>
-            <button class="btn btn-secondary" onclick="resetAll()">Reset All</button>
-        </div>
+            <!-- Right Panel: Physical Note Denominations Input Grid -->
+            <div class="panel panel-notes">
+                <div class="panel-header-flex">
+                    <div class="panel-title">PHYSICAL NOTE DENOMINATIONS</div>
+                    <button class="btn-text-reset" onclick="resetAll()">Reset All</button>
+                </div>
 
-        <!-- Total Display & English Words Result Box -->
-        <div class="result-box">
-            <div id="total" class="total-display">💰 ₹0</div>
-            <div id="wordsResult" class="words-display">Zero Rupees Only</div>
-            <div id="result" class="breakdown-display"></div>
+                <!-- Dynamic Note Cards Grid -->
+                <div class="notes-grid-wide" id="notesGrid">
+                    <!-- Rendered dynamically by Script.js -->
+                </div>
+
+                <!-- Action Button -->
+                <div class="action-bar">
+                    <button class="btn btn-primary" onclick="countNotes()">Calculate Breakdown</button>
+                </div>
+            </div>
         </div>
     </div>
 
