@@ -53,6 +53,7 @@ function renderNoteGrid() {
     });
 
     calculateTotal();
+    countNotes();
 }
 
 // Set Active Currency Mode
@@ -93,11 +94,21 @@ function calculateTotal() {
 function numberToWords(num, currencyName = "Rupees") {
     if (!num || num === 0) return `Zero ${currencyName} Only`;
 
+    // Handle large numbers cleanly using BigInt if passed as string/big number
+    try {
+        if (typeof num === 'string') {
+            num = parseFloat(num) || 0;
+        }
+    } catch(e) {}
+
+    if (num <= 0) return `Zero ${currencyName} Only`;
+
     const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 
                   'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
     const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
 
     function convertBelowThousand(n) {
+        n = Math.floor(n);
         let str = '';
         if (n >= 100) {
             str += ones[Math.floor(n / 100)] + ' Hundred ';
@@ -114,7 +125,7 @@ function numberToWords(num, currencyName = "Rupees") {
     if (currentCurrencyKey === 'INR') {
         // Recursive Indian Numbering System (Crore, Lakh, Thousand, Hundred)
         function inWordsINR(n) {
-            if (n === 0) return '';
+            if (n <= 0) return '';
             let str = '';
 
             if (n >= 10000000) { // 1 Crore = 10,000,000
@@ -138,7 +149,7 @@ function numberToWords(num, currencyName = "Rupees") {
     } else {
         // Recursive Western Numbering System (Trillion, Billion, Million, Thousand)
         function inWordsWestern(n) {
-            if (n === 0) return '';
+            if (n <= 0) return '';
             let str = '';
 
             if (n >= 1000000000000) {
@@ -169,18 +180,20 @@ function numberToWords(num, currencyName = "Rupees") {
 // Type 2: Target Amount Breakdown Algorithm & Words Display
 function countNotes() {
     const amountInput = document.getElementById("amount");
-    let amount = amountInput ? parseInt(amountInput.value) : 0;
+    const rawVal = amountInput ? amountInput.value.trim() : "";
+    let amount = rawVal ? parseFloat(rawVal) || 0 : 0;
+    
     const resultElement = document.getElementById("result");
     const curr = currencies[currentCurrencyKey];
 
     const breakdownTotalElement = document.getElementById("breakdownTotal");
     if (breakdownTotalElement) {
-        breakdownTotalElement.innerHTML = `🎯 ${curr.symbol}${(amount || 0).toLocaleString()}`;
+        breakdownTotalElement.innerHTML = `🎯 ${curr.symbol}${amount > 0 ? amount.toLocaleString() : 0}`;
     }
 
     const breakdownWordsElement = document.getElementById("breakdownWords");
     if (breakdownWordsElement) {
-        breakdownWordsElement.textContent = numberToWords(amount || 0, curr.name);
+        breakdownWordsElement.textContent = numberToWords(amount, curr.name);
     }
 
     if (!amount || amount <= 0) {
@@ -196,7 +209,7 @@ function countNotes() {
         remaining %= note;
 
         if (count > 0) {
-            output += `${curr.symbol}${note} → <b>${count}</b> notes<br>`;
+            output += `${curr.symbol}${note} → <b>${count.toLocaleString()}</b> notes<br>`;
         }
     });
 
@@ -219,7 +232,7 @@ function resetPhysicalNotes() {
     calculateTotal();
 }
 
-// Reset Type 2 Breakdown
+// Reset Type 2 Target Breakdown
 function resetBreakdown() {
     const amountInput = document.getElementById("amount");
     if (amountInput) amountInput.value = "";
